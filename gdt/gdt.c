@@ -13,7 +13,7 @@ static void gdt_set_gate(int32_t num,uint32_t base,uint32_t limit,uint8_t access
 extern uint32_t stack;
 
 //初始去全局描述符表
-void init_gate(){
+void init_gdt(){
     gdt_ptr.limit = sizeof(gdt_entry_t)*GDT_LENGTH-1;
     gdt_ptr.basa = (uint32_t)&gdt_entries;
 
