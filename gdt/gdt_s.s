@@ -1,6 +1,6 @@
 [GLOBAL gdt_flush]
 
-gdt_flush：
+gdt_flush:
     mov eax, [esp+4] ;参数存入eax寄存器
     lgdt [eax]       ;加载到GDTR修改原先[设置GRUB]
 
