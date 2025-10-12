@@ -25,7 +25,7 @@ int kern_entry()
 {
 	init_debug();
 	init_gdt();
-	init_idt;
+	init_idt();
 
 	console_clear();
 
