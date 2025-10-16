@@ -150,10 +150,10 @@ void irq_handler(pt_regs *regs){
 		 outb(0xA0, 0x20);
 	}
 	//发送重设信号给主片
+	outb(0x20, 0x20);
 	if(interrupt_handlers[regs->int_no]){
 		interrupt_handlers[regs->int_no](regs);
 	}
-	outb(0x20, 0x20);
 }
 
 // 注册一个中断处理函数
