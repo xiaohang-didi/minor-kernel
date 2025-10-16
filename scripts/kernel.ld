@@ -55,7 +55,7 @@ SECTIONS
 		*(.stabstr)
 	 	. = ALIGN(4096);
 	}
-	
+	PROVIDED(kern end = . );
 	/DISCARD/ : { *(.comment) *(.eh_frame) }
 }
 
