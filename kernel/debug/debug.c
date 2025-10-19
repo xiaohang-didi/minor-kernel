@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  debug.c
- *
- *    Description:  调试相关的函数
- *
- *        Version:  1.0
- *        Created:  2013年11月06日 15时16分18秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
-
 #include "debug.h"
 
 static void print_stack_trace();

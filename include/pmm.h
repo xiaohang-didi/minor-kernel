@@ -3,7 +3,7 @@
 
 #include "multiboot.h"
 
-// 线程栈的大小
+// 线程栈的大小 2^13
 #define STACK_SIZE 8192
 
 // 支持的最大物理内存(512MB)
