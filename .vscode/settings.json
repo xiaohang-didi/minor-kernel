@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "types.h": "c",
-        "console.h": "c"
+        "console.h": "c",
+        "heap.h": "c",
+        "vmm.h": "c",
+        "debug.h": "c",
+        "pmm.h": "c"
     }
 }
