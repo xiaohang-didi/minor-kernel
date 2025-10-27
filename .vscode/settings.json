@@ -5,6 +5,9 @@
         "heap.h": "c",
         "vmm.h": "c",
         "debug.h": "c",
-        "pmm.h": "c"
+        "pmm.h": "c",
+        "sched.h": "c",
+        "idt.h": "c",
+        "gdt.h": "c"
     }
 }

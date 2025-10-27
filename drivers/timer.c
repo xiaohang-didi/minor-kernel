@@ -4,8 +4,7 @@
 #include"idt.h"
 
 void timer_callback(pt_regs *regs){
-    static uint32_t tick = 0;
-    printk(rc_black,rc_red,"Tick:%d\n",tick++);
+    schedule();
 }
 
 void init_timer(uint32_t frequency){

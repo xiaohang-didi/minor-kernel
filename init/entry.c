@@ -1,11 +1,15 @@
-#include "gdt.h"
-#include "string.h"
+#include "common.h"
 #include "console.h"
+#include "string.h"
 #include "debug.h"
+#include "gdt.h"
 #include "idt.h"
 #include "timer.h"
 #include "pmm.h"
 #include "vmm.h"
+#include "heap.h"
+#include "task.h"
+#include "sched.h"
 
 
 //内核初始化函数
@@ -55,6 +59,20 @@ __attribute__((section(".init.text"))) void kern_entry(){
 	glb_mboot_ptr = mboot_ptr_tmp + PAGE_OFFSET;
 	//调用内核初始化函数
 	kern_init();
+}
+
+int flag = 0;
+
+int thread(void *arg)
+{
+	while (1) {
+		if (flag == 1) {
+			printk_color(rc_black, rc_green, "B");
+			flag = 0;
+		}
+	}
+
+	return 0;
 }
 
 void kern_init()
