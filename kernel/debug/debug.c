@@ -12,6 +12,7 @@ void init_debug()
 
 void print_cur_status()
 {
+	//对于静态变量只在第一次调用时初始化，后续不会再重复执行，他的生命周期等于整个程序
 	static int round = 0;
 	uint16_t reg1, reg2, reg3, reg4;
 

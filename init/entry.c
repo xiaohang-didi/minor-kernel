@@ -21,26 +21,31 @@ multiboot_t *glb_mboot_ptr;
 //开启分页机制之后的内核栈
 char kern_stack[STACK_SIZE];
 
-//内核使用的临时页表和页目录
-//该地址必须是页对齐的地址
+//pgd_tmp用于存放在cr3记录页目录起始地址
+//定义了 pte_low  pte_high 两个页表
 __attribute__((section(".init.data"))) pgd_t *pgd_tmp = (pgd_t *)0x1000;
 __attribute__((section(".init.data"))) pgd_t *pte_low = (pgd_t *)0x2000;
-__attribute__((section(".init.data"))) pgd_t *pte_hign = (pgd_t *)0x3000;
+__attribute__((section(".init.data"))) pgd_t *pte_high = (pgd_t *)0x3000;
 
 //内核入口函数
 __attribute__((section(".init.text"))) void kern_entry(){
+	//记录两个页表在页目录的存放位置
 	pgd_tmp[0] = (uint32_t) pte_low | PAGE_PRESENT | PAGE_WRITE;
-	pgd_tmp[PGD_INDEX(PAGE_OFFSET)] = (uint32_t)pte_hign | PAGE_PRESENT | PAGE_WRITE;
+	pgd_tmp[PGD_INDEX(PAGE_OFFSET)] = (uint32_t)pte_high | PAGE_PRESENT | PAGE_WRITE;
 	
 	//映射内核虚拟地址 4MB 到物理地址的前 4MB
 	int i;
-	for(i = 0;i < 1024; i++){
-		pte_hign[i] = (i << 12) | PAGE_PRESENT | PAGE_WRITE;
+	//这个地方执行 i<<12 是因为一个页帧我们规定为4KB
+	for(i = 0; i < 1024; i++){
+		pte_low[i] = (i << 12) | PAGE_PRESENT | PAGE_WRITE;
 	}
+
 	//映射  x00000000−0x00400000 的物理地址到虚拟地址 0xC0000000−0xC0400000
 	for(i = 0; i < 1024; i++){
-		pte_hign[i] = (i << 12) | PAGE_PRESENT | PAGE_WRITE;
+		pte_high[i] = (i << 12) | PAGE_PRESENT | PAGE_WRITE;
 	}
+
+	//默认AT&T汇编格式
 	//设置临时页表
 	//"+r"可输入可输出约束，“r” 只读输入约束
 	asm volatile ("mov %0, %%cr3" : : "r" (pgd_tmp));

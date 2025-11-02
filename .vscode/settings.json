@@ -8,6 +8,10 @@
         "pmm.h": "c",
         "sched.h": "c",
         "idt.h": "c",
-        "gdt.h": "c"
+        "gdt.h": "c",
+        "common.h": "c",
+        "timer.h": "c",
+        "elf.h": "c",
+        "string.h": "c"
     }
 }

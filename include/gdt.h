@@ -17,7 +17,7 @@ typedef
 struct gdt_ptr_t
 {
     uint16_t limit;//segment limit
-    uint32_t basa;//segment base
+    uint32_t base;//segment base
 } __attribute__((packed)) gdt_ptr_t;
 
 //initialize GDT

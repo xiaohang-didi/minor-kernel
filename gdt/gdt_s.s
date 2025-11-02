@@ -3,7 +3,7 @@
 gdt_flush:
     mov eax, [esp+4] ;参数存入eax寄存器
     lgdt [eax]       ;加载到GDTR修改原先[设置GRUB]
-
+    //这里加载数据段的选择子
     mov ax, 0x10     ; 加载我们的数据段描述符
     mov ds, ax       ; 更新所有可以更新的段寄存器mov es, ax
     mov fs, ax

@@ -15,9 +15,9 @@ extern uint32_t stack;
 //初始去全局描述符表
 void init_gdt(){
     gdt_ptr.limit = sizeof(gdt_entry_t)*GDT_LENGTH-1;
-    gdt_ptr.basa = (uint32_t)&gdt_entries;
+    gdt_ptr.base = (uint32_t)gdt_entries;
 
-    //采用 Intel 平坦模型
+    //采用 Intel 平坦模型 我们知道平坦模型的基地址都是0，段线长为整个地址空间的长度，因此只需要偏移地址即可得到对应的物理地址
     gdt_set_gate(0, 0, 0, 0, 0); // 按照 Intel 文档要求，第一个描述符必须全 0
     gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // 指令段
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // 数据段

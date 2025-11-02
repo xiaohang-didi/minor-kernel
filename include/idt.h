@@ -96,7 +96,7 @@ void isr255();
 // IRQ 处理函数
 void irq_handler(pt_regs *regs);
 
-// 定义IRQ
+// 定义IRQ  注册中断请求编号
 #define  IRQ0     32 	// 电脑系统计时器
 #define  IRQ1     33 	// 键盘
 #define  IRQ2     34 	// 与 IRQ9 相接，MPU-401 MD 使用
