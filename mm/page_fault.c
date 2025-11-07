@@ -3,6 +3,7 @@
 
 void page_fault(pt_regs *regs)
 {
+	//cr2记录页故障虚拟地址
 	uint32_t cr2;
 	asm volatile ("mov %%cr2, %0" : "=r" (cr2));
 

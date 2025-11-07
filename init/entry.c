@@ -9,7 +9,7 @@
 #include "vmm.h"
 #include "heap.h"
 #include "task.h"
-#include "sched.h"
+#include "my_sched.h"
 
 
 //内核初始化函数
@@ -18,8 +18,11 @@ void kern_init();
 //开启分页机制之后的 Multiboot 数据结构指针
 multiboot_t *glb_mboot_ptr;
 
-//开启分页机制之后的内核栈
+//开启分页机制之后的内核栈，手动创建一个第一个线程的内核栈
 char kern_stack[STACK_SIZE];
+
+//内核栈顶地址
+uint32_t kern_stack_top;
 
 //pgd_tmp用于存放在cr3记录页目录起始地址
 //定义了 pte_low  pte_high 两个页表
@@ -58,7 +61,7 @@ __attribute__((section(".init.text"))) void kern_entry(){
 	asm volatile("mov %0,%%cr0" : : "r"(cr0));
 
 	//切换内核栈
-	uint32_t kern_stack_top = ((uint32_t)kern_stack+STACK_SIZE) & 0xFFFFFFF0;
+	kern_stack_top = ((uint32_t)kern_stack+STACK_SIZE) & 0xFFFFFFF0;
 	asm volatile ("mov %0, %%esp\n\t" "xor %%ebp, %%ebp" : : "r" (kern_stack_top));
 	//更新全局 multiboot_t 指针
 	glb_mboot_ptr = mboot_ptr_tmp + PAGE_OFFSET;
@@ -90,8 +93,8 @@ void kern_init()
 	printk_color(rc_black, rc_green, "Hello, OS kernel!\n");
 
 	init_timer(200);
-	// 开启中断
-	// asm volatile ("sti");
+	// 开启中断，我们在idt_s.s构造中断请求宏的时候关中断了
+	asm volatile ("sti");
 
 	printk("kernel in memory start: 0x%08X\n", kern_start);
 	printk("kernel in memory end:   0x%08X\n", kern_end);

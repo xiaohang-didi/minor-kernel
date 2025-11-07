@@ -3,12 +3,14 @@
 gdt_flush:
     mov eax, [esp+4] ;参数存入eax寄存器
     lgdt [eax]       ;加载到GDTR修改原先[设置GRUB]
-    //这里加载数据段的选择子
+    ;这里加载数据段的选择子
     mov ax, 0x10     ; 加载我们的数据段描述符
     mov ds, ax       ; 更新所有可以更新的段寄存器mov es, ax
     mov fs, ax
     mov gs, ax
     mov ss, ax
+    
+    ;在x86汇编中,这是远跳转的指令格式，选择字:偏移地址
     jmp 0x08:.flush  ; 远跳转，0x08是我们的代码段描述符
                      ; 远眺目的是为了清空流水席那并串行化处理器
 

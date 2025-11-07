@@ -12,6 +12,13 @@
         "common.h": "c",
         "timer.h": "c",
         "elf.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "task.h": "c",
+        "executor": "c",
+        "io_context": "c",
+        "future": "c",
+        "mutex": "c",
+        "stop_token": "c",
+        "thread": "c"
     }
 }

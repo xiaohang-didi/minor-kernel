@@ -24,10 +24,12 @@ void init_idt(){
 	//两片级联的 Intel 8259A 芯片
 	//主片端口 0x20 0x21
 	//从片端口 0xA0 0xA1
-
-	//初始化主片、从片
+	//		命令端口  数据端口
+	//0x11输入初始化主片、从片命令
 	outb(0x20, 0x11);
 	outb(0xA0, 0x11);
+
+	//接下来我们呢必须按照ICW1、ICW2、ICW3、ICW4的顺序写入
 
 	// 设置主片 IRQ 从 0x20(32) 号中断开始
 	outb(0x21, 0x20);
@@ -55,11 +57,13 @@ void init_idt(){
 
     idt_ptr.limit = sizeof(idt_entry_t)*256-1;
 
-    idt_ptr.base = (uint32_t)&idt_entries;
+    idt_ptr.base = (uint32_t)idt_entries;
 
     bzero((uint8_t *)&idt_entries,sizeof(idt_entry_t) * 256);
 
 	// 0-32:  用于 CPU 的中断处理
+	//这里解释一下(uint32_t)isr0参数，我们在汇编代码中定义了全局符号 isr+数字 的形式，链接文件会在这个地方检测到全局符号跳转执行对应的函数入口代码
+	//Interrupt service routine
 	idt_set_gate( 0, (uint32_t)isr0,  0x08, 0x8E);
 	idt_set_gate( 1, (uint32_t)isr1,  0x08, 0x8E);
 	idt_set_gate( 2, (uint32_t)isr2,  0x08, 0x8E);
@@ -93,6 +97,7 @@ void init_idt(){
 	idt_set_gate(30, (uint32_t)isr30, 0x08, 0x8E);
 	idt_set_gate(31, (uint32_t)isr31, 0x08, 0x8E);
 
+	//Interrupt request
 	idt_set_gate(32, (uint32_t)irq0, 0x08, 0x8E);
 	idt_set_gate(33, (uint32_t)irq1, 0x08, 0x8E);
 	idt_set_gate(34, (uint32_t)irq2, 0x08, 0x8E);

@@ -58,7 +58,7 @@ umount_image:
 
 .PHONY:qemu
 qemu:
-	qemu -fda floppy.img -boot a
+	qemu-system-i386 -kernel hx_kernel -m 128M
 
 .PHONY:bochs
 bochs:

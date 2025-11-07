@@ -16,6 +16,7 @@ enum task_state {
 } task_state;
 
 // 内核线程的上下文切换保存的信息
+typedef
 struct context {
 	uint32_t esp;
 	uint32_t ebp;
@@ -26,19 +27,21 @@ struct context {
 };
 
 // 进程内存地址结构
+typedef
 struct mm_struct {
 	pgd_t *pgd_dir; 	// 进程页表
-};
+} mm_struct;
 
 // 进程控制块 PCB 
+typedef
 struct task_struct {
 	volatile task_state state; 	// 进程当前状态
 	pid_t 	 pid; 			// 进程标识符
-	void  	*stack; 		// 进程的内核栈地址
-	struct mm_struct *mm; 		// 当前进程的内存地址映像
+	void *stack; 		// 进程的内核栈地址
+	mm_struct *mm; 		// 当前进程的内存地址映像
 	struct context context; 	// 进程切换需要的上下文信息
 	struct task_struct *next; 	// 链表指针
-};
+} task_struct;
 
 // 全局 pid 值
 extern pid_t now_pid;
@@ -49,4 +52,4 @@ int32_t kernel_thread(int (*fn)(void *), void *arg);
 // 线程退出函数
 void kthread_exit();
 
-#endif 	// INCLUDE_TASK_H_
+#endif

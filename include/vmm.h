@@ -55,7 +55,6 @@ typedef uint32_t pgd_t;
 typedef uint32_t pte_t;
 
 // 页全局目录
-// 页表成员数
 #define PGD_SIZE (PAGE_SIZE/sizeof(pte_t))
 
 // 页表成员数

@@ -9,6 +9,7 @@ switch_to:
     mov [eax+8], ebx
     mov [eax+12], esi
     mov [eax+16], edi
+    ;push eflags,不能直接将eflags的值传给通用寄存器
     pushf
     pop ecx
     mov [eax+20], ecx
