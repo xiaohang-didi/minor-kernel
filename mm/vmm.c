@@ -48,7 +48,7 @@ void map(pgd_t *pgd_now, uint32_t va, uint32_t pa, uint32_t flags)
 { 	
 	uint32_t pgd_idx = PGD_INDEX(va);
 	uint32_t pte_idx = PTE_INDEX(va); 
-	//高二十位是页表基址，低十二位是属性标志，这里只需要页表基址
+	//高二十位是页表基址，低十二位是属性标志，这里只需要页表基址使用页掩码屏蔽属性位
 	pte_t *pte = (pte_t *)(pgd_now[pgd_idx] & PAGE_MASK);
 	if (!pte) {
 		pte = (pte_t *)pmm_alloc_page();
@@ -65,6 +65,7 @@ void map(pgd_t *pgd_now, uint32_t va, uint32_t pa, uint32_t flags)
 	pte[pte_idx] = (pa & PAGE_MASK) | flags;
 
 	// 通知 CPU 更新页表缓存
+	//invalidate page（页失效）
 	asm volatile ("invlpg (%0)" : : "a" (va));
 }
 
