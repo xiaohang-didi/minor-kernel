@@ -9,7 +9,7 @@
 #include "vmm.h"
 #include "heap.h"
 #include "task.h"
-#include "sched.h"
+#include "my_sched.h"
 
 // 内核初始化函数
 void kern_init();

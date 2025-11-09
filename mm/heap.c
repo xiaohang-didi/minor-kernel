@@ -36,6 +36,7 @@ void *kmalloc(uint32_t len){
         if(cur_header->allocated == 0 && cur_header->length >= len){
             //按照当前长度切割内存
             split_chunk(cur_header,len);
+            cur_header->allocated = 1;
             return (void *)((uint32_t)cur_header+sizeof(header_t));
         }
         //否则就要推移指针直至长度合适
@@ -54,7 +55,27 @@ void *kmalloc(uint32_t len){
 
     //检查是否需要申请内存页
     alloc_chunk(chunk_start,len);
+	cur_header = (header_t *)chunk_start;
+	cur_header->prev = prev_header;
+	cur_header->next = 0;
+	cur_header->allocated = 1;
+	cur_header->length = len;
+	
+	if (prev_header) {
+		prev_header->next = cur_header;
+	}
 
+	return (void*)(chunk_start + sizeof(header_t));
+}
+
+void kfree(void *p)
+{
+	// 指针回退到管理结构，并将已使用标记置 0
+	header_t *header = (header_t*)((uint32_t)p - sizeof(header_t));
+	header->allocated = 0;
+
+	// 粘合内存块
+	glue_chunk(header);
 }
 
 void alloc_chunk(uint32_t start,uint32_t len){

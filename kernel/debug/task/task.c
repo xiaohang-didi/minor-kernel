@@ -21,7 +21,7 @@ int32_t kernel_thread(int (*fn)(void *),void *arg){
 
     new_task->state = TASK_RUNNABLE;
     
-    //内核创建进程的时候会为新进程重新申请一个进程控制块（PCB），并使用父进程的PCB进行初始化，因此这里指向父进程的栈
+    //内核创建线程共享内核资源，这是简单内核的权宜之计
     new_task->stack = current;
     new_task->pid = now_pid++;
     new_task->mm = NULL;
