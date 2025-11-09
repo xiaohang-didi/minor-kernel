@@ -1,13 +1,3 @@
-#!Makefile
-#
-# --------------------------------------------------------
-#
-#    hurlex 这个小内核的 Makefile
-#    默认使用的C语言编译器是 GCC、汇编语言编译器是 nasm
-#
-# --------------------------------------------------------
-#
-
 # patsubst 处理所有在 C_SOURCES 字列中的字（一列文件名），如果它的 结尾是 '.c'，就用 '.o' 把 '.c' 取代
 C_SOURCES = $(shell find . -name "*.c")
 C_OBJECTS = $(patsubst %.c, %.o, $(C_SOURCES))
@@ -35,16 +25,16 @@ all: $(S_OBJECTS) $(C_OBJECTS) link update_image
 
 link:
 	@echo 链接内核文件...
-	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o hx_kernel
+	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o lh_kernel
 
 .PHONY:clean
 clean:
-	$(RM) $(S_OBJECTS) $(C_OBJECTS) hx_kernel
+	$(RM) $(S_OBJECTS) $(C_OBJECTS) lh_kernel
 
 .PHONY:update_image
 update_image:
 	sudo mount floppy.img /mnt/kernel
-	sudo cp hx_kernel /mnt/kernel/hx_kernel
+	sudo cp lh_kernel /mnt/kernel/lh_kernel
 	sleep 1
 	sudo umount /mnt/kernel
 
@@ -58,7 +48,7 @@ umount_image:
 
 .PHONY:qemu
 qemu:
-	qemu-system-i386 -kernel hx_kernel -m 128M
+	qemu-system-i386 -kernel lh_kernel -m 128M
 
 .PHONY:bochs
 bochs:
