@@ -27,13 +27,13 @@ uint32_t kern_stack_top;
 // 该地址必须是页对齐的地址，内存 0-640KB 肯定是空闲的
 __attribute__((section(".init.data"))) pgd_t *pgd_tmp  = (pgd_t *)0x1000;
 __attribute__((section(".init.data"))) pgd_t *pte_low  = (pgd_t *)0x2000;
-__attribute__((section(".init.data"))) pgd_t *pte_hign = (pgd_t *)0x3000;
+__attribute__((section(".init.data"))) pgd_t *pte_high = (pgd_t *)0x3000;
 
 // 内核入口函数
 __attribute__((section(".init.text"))) void kern_entry()
 {
 	pgd_tmp[0] = (uint32_t)pte_low | PAGE_PRESENT | PAGE_WRITE;
-	pgd_tmp[PGD_INDEX(PAGE_OFFSET)] = (uint32_t)pte_hign | PAGE_PRESENT | PAGE_WRITE;
+	pgd_tmp[PGD_INDEX(PAGE_OFFSET)] = (uint32_t)pte_high | PAGE_PRESENT | PAGE_WRITE;
 
 	// 映射内核虚拟地址 4MB 到物理地址的前 4MB
 	int i;
@@ -43,7 +43,7 @@ __attribute__((section(".init.text"))) void kern_entry()
 
 	// 映射 0x00000000-0x00400000 的物理地址到虚拟地址 0xC0000000-0xC0400000
 	for (i = 0; i < 1024; i++) {
-		pte_hign[i] = (i << 12) | PAGE_PRESENT | PAGE_WRITE;
+		pte_high[i] = (i << 12) | PAGE_PRESENT | PAGE_WRITE;
 	}
 	
 	// 设置临时页表
