@@ -3,6 +3,7 @@
 // 端口写一个字节
 inline void outb(uint16_t port, uint8_t value)
 {
+	//N为无符号8位整数
 	asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));
 }
 

@@ -4,6 +4,7 @@
 #include"idt.h"
 
 void timer_callback(pt_regs *regs){
+	//进行的操作是保存当前上下文，并且切换下一个进程
     schedule();
 }
 
@@ -11,14 +12,15 @@ void init_timer(uint32_t frequency){
     //注册事件相关的函数
     register_interrupt_handler(IRQ0,timer_callback);
 
-	// Intel 8253/8254 PIT芯片 I/O端口地址范围是40h~43h
+	// Intel 8253/8254 PIT(programmer interval timer 可编程中断定时器)芯片 I/O端口地址范围是40h~43h
 	// 输入频率为 1193180，frequency 即每秒中断次数
+	//PIT 可编程定时器中，0x40触发定时中断，0x41保留，0x42控制pc扬声器（蜂鸣器），0x43配置前面3个通道的工作方式
 	uint32_t divisor = 1193180 / frequency;
 
     // D7 D6 D5 D4 D3 D2 D1 D0
 	// 0  0  1  1  0  1  1  0
 	// 即就是 36 H
-	// 设置 8253/8254 芯片工作在模式 3 下
+	// 设置 8253/8254 芯片工作在模式 3 下，方波器发生方式
 	outb(0x43, 0x36);
 
 	// 拆分低字节和高字节
@@ -29,5 +31,3 @@ void init_timer(uint32_t frequency){
 	outb(0x40, low);
 	outb(0x40, hign);
 }
-
-//PIT 可编程定时器中，0x40触发定时中断，0x41保留，0x42控制pc扬声器（蜂鸣器），0x43配置前面3个通道的工作方式
