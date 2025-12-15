@@ -1,4 +1,5 @@
 #include "gdt.h"
+#include "idt.h"
 #include "pmm.h"
 #include "vmm.h"
 #include "heap.h"
@@ -53,6 +54,7 @@ int32_t kernel_thread(int (*fn)(void *),void *arg){
     return new_task->pid;
 }
 
+//线程退出
 void kthread_exit(){
     //关中断，防止在修改链表时被打断
     asm volatile("cli");
@@ -86,4 +88,87 @@ void kthread_exit(){
 
     schedule();
     panic("kthread_exit have error");
+}
+
+//获取当前栈的栈底位置
+task_struct *running_task()
+{
+
+    task_struct *tsk;
+    asm volatile(
+        "movl %%esp, %%eax\n"
+        "andl $0xfffff000, %%eax\n"
+        :"=a"(tsk):
+    );
+    return tsk;
+}
+
+void task_to_user_mode(uint32_t target){
+    task_struct *task = running_task();
+
+    //创建用户进程虚拟内存位图
+    // task->vmap = kmalloc(sizeof(bitmap_t));
+    // void *buf = (void *)pmm_alloc_page();
+    // bitmap_init(task->vmap, buf, USER_MMAP_SIZE / PAGE_SIZE / 8, USER_MMAP_ADDR / PAGE_SIZE);
+
+    // //创建用户进程页表
+    // task->pde = (uint32_t)copy_pde();
+    // asm volatile("movl %%eax %%cr3\n" :: "a"(task->pde));
+
+    //找到用户栈栈顶
+    uint32_t addr = (uint32_t)task + PAGE_SIZE;
+
+    //分配中断帧大小
+    addr -= sizeof(intr_frame_t);
+    intr_frame_t *iframe = (intr_frame_t *)addr;
+
+    //对中断帧进行初始化
+    iframe->vector = 0x20;
+
+    iframe->edi = 1;
+    iframe->esi = 2;
+    iframe->ebp = 3;
+    iframe->esp_dummy = 4;
+    
+    iframe->ebx = 5;
+    iframe->edx = 6;
+    iframe->ecx = 7;
+    iframe->eax = 8;
+
+    iframe->gs = 0;
+    iframe->fs = USER_DATA_SELECTOR;
+    iframe->es = USER_DATA_SELECTOR;
+    iframe->ds = USER_DATA_SELECTOR;
+
+    iframe->vector0 = 0;
+
+    iframe->error = 0;
+
+    iframe->eip = (uint32_t)target;
+    iframe->cs = USER_CODE_SELECTOR;
+    iframe->eflags = (0 << 12 | 0b10 | 1 << 9);
+    uint32_t stack = pmm_alloc_page();
+    iframe->esp = PAGE_SIZE + stack;
+    iframe->ss = USER_DATA_SELECTOR;
+
+    //m限制符表示将iframe的地址作为参数传入
+    asm volatile(
+        "movl %0, %%esp\n"
+        "jmp interrupt_exit\n" :: "m"(iframe));
+}
+
+
+void task_yield()
+{
+    schedule();
+}
+
+void task_sleep(uint32_t ms)
+{
+    panic("syscall not implement !");
+    // assert(!get_interrupt_state(),"Don't interrupt"); // 不可中断
+
+    // task_struct *task = running_task();
+
+    // task_block(task, &sleep_list, TASK_SLEEPING, ms);
 }

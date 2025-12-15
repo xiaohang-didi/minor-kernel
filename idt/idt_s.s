@@ -63,6 +63,7 @@ ISR_NOERRCODE 29
 ISR_NOERRCODE 30
 ISR_NOERRCODE 31
 ; 32～255 用户自定义
+ISR_NOERRCODE 128
 ISR_NOERRCODE 255
 
 [GLOBAL isr_common_stub]
@@ -153,3 +154,22 @@ irq_common_stub:
 	add esp, 8     		 ; 清理压栈的 错误代码 和 ISR 编号
 	iret          		 ; 出栈 CS, EIP, EFLAGS, SS, ESP
 .end:
+
+;切换到用户态的上下文
+[GLOBAL interrupt_exit]
+interrupt_exit:
+
+	add esp, 4
+
+	;恢复下文寄存器信息，然后恢复到用户模式
+	popa
+	pop gs
+	pop fs
+	pop es
+	pop ds
+
+	;对应 push %1
+	add esp, 8
+
+	;依次弹出eip，cs，eflags并加载到对应寄存器
+	iret

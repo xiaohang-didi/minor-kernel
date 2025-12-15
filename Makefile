@@ -50,6 +50,10 @@ umount_image:
 qemu:
 	qemu-system-i386 -kernel lh_kernel -m 128M
 
+.PHONY:qemu_g
+qemu_g:
+	qemu-system-i386 -kernel lh_kernel -m 128M -s -S -d int,cpu_reset -no-reboot -D qemu.log
+
 .PHONY:bochs
 bochs:
 	bochs -f scripts/bochsrc.txt

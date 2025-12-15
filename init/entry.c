@@ -68,24 +68,11 @@ __attribute__((section(".init.text"))) void kern_entry()
 	kern_init();
 }
 
-int flag = 0;
-
-int thread(void *arg)
-{
-	while (1) {
-		if (flag == 1) {
-			printk_color(rc_black, rc_green, "B");
-			flag = 0;
-		}
-	}
-
-	return 0;
-}
-
 void kern_init()
 {
 	init_debug();
 	init_gdt();
+	tss_init();
 	init_idt();
 
 	console_clear();
@@ -108,20 +95,12 @@ void kern_init()
 
 	init_sched();
 
-	kernel_thread(thread, NULL);
-
 	// 开启中断
 	asm volatile("sti");
 
-	while (1) {
-		if (flag == 0) {
-			printk_color(rc_black, rc_red, "A");
-			flag = 1;
-		}
-	}
+	init_thread();
 
 	while (1) {
 		asm volatile ("hlt");
 	}
 }
-

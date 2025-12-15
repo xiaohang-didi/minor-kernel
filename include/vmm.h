@@ -31,8 +31,35 @@
  */
 #define PAGE_USER 	0x4
 
-// 虚拟分页大小 2^12=2KB
+// 虚拟分页大小 2^12=4KB
 #define PAGE_SIZE 	4096
+
+// 内核占用的内存大小 16M
+#define KERNEL_MEMORY_SIZE 0x1000000
+
+// 内存虚拟磁盘地址
+#define KERNEL_RAMDISK_MEM 0xC00000
+
+// 内存虚拟磁盘大小
+#define KERNEL_RAMDISK_SIZE 0x400000
+
+// 用户程序地址
+#define USER_EXEC_ADDR KERNEL_MEMORY_SIZE
+
+// 用户映射内存开始位置
+#define USER_MMAP_ADDR 0x8000000
+
+// 用户映射内存大小
+#define USER_MMAP_SIZE 0x8000000
+
+// 用户栈顶地址 256M
+#define USER_STACK_TOP 0x10000000
+
+// 用户栈最大 2M
+#define USER_STACK_SIZE 0x200000
+
+// 用户栈底地址
+#define USER_STACK_BOTTOM (USER_STACK_TOP - USER_STACK_SIZE)
 
 // 页掩码，用于 4KB 对齐
 #define PAGE_MASK      0xFFFFF000

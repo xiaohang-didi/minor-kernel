@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  string.h
- *
- *    Description:  字符串处理函数
- *
- *        Version:  1.0
- *        Created:  2013年11月06日 20时12分44秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Hurley (LiuHuan), liuhuan1992@gmail.com
- *        Company:  Class 1107 of Computer Science and Technology
- *
- * =====================================================================================
- */
-
 #ifndef INCLUDE_STRING_H_
 #define INCLUDE_STRING_H_
 

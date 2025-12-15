@@ -19,7 +19,12 @@
         "future": "c",
         "mutex": "c",
         "stop_token": "c",
-        "thread": "c"
+        "thread": "c",
+        "my_sched.h": "c",
+        "stdarg.h": "c",
+        "syscall.h": "c",
+        "stdio.h": "c",
+        "vargs.h": "c"
     },
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda",

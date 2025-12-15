@@ -43,6 +43,18 @@ struct pt_regs_t{
 	uint32_t ss;
 } pt_regs;
 
+typedef struct gate_t
+{
+    uint16_t offset0;    // 段内偏移 0 ~ 15 位
+    uint16_t selector;   // 代码段选择子
+    uint8_t reserved;    // 保留不用
+    uint8_t type : 4;    // 任务门/中断门/陷阱门
+    uint8_t segment : 1; // segment = 0 表示系统段
+    uint8_t DPL : 2;     // 使用 int 指令访问的最低权限
+    uint8_t present : 1; // 是否有效
+    uint16_t offset1;    // 段内偏移 16 ~ 31 位
+} __attribute__((packed)) gaet_t;
+
 //定义中断处理函数指针
 typedef void (*interrupt_handler_t)(pt_regs *);
 
