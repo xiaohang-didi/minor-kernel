@@ -148,7 +148,7 @@ void task_to_user_mode(uint32_t target){
     iframe->cs = USER_CODE_SELECTOR;
     iframe->eflags = (0 << 12 | 0b10 | 1 << 9);
     uint32_t stack = pmm_alloc_page();
-    iframe->esp = PAGE_SIZE + stack;
+    iframe->esp = USER_MMAP_ADDR + PAGE_SIZE;
     iframe->ss = USER_DATA_SELECTOR;
 
     //m限制符表示将iframe的地址作为参数传入

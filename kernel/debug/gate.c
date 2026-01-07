@@ -13,6 +13,10 @@
 //为我们的系统调用注册系统调用表
 interrupt_handler_t syscall_table[SYSCALL_SIZE];
 
+// void syscall_printf(){
+
+// }
+
 void syscall_check(uint32_t nr){
     if(nr > SYSCALL_SIZE){
         panic("tribute an error syscall nr !");
@@ -49,9 +53,8 @@ void syscall_init(){
 }
 
 static void real_init_thread(){
-    sleep(100);
 	while(true){
-        printf("user space is successful!\n");
+        printf("successful");
     }
 }
 
